@@ -171,3 +171,46 @@ exports.checkAuth = async (req, res) => {
         })
     }
 }
+
+// check is authentication valid
+exports.checkAuth = async (req, res) => {
+    try {
+        const { id } = req.user
+        
+        const dataUser = await user.findOne({
+            where: {
+                id,
+            },
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "password"],
+            }
+        })
+
+        if (!dataUser) {
+            return res.status(404).send({
+                status: "failed",
+            })
+        }
+        
+        res.send({
+            status: "success",
+            data: {
+                user: {
+                    id: dataUser.id,
+                    fullName: dataUser.fullName,
+                    email: dataUser.email,
+                    phone: dataUser.phone,
+                    address: dataUser.address,
+                    role: dataUser.role,
+                    avatar: dataUser.avatar,
+                },
+            }
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            status: 'failed',
+            message: 'Server error'
+        })
+    }
+}
