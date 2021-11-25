@@ -1,13 +1,14 @@
 const express = require('express')
 const { register, login, checkAuth } = require('../controllers/auth')
 const { auth } = require('../middlewares/auth')
-const { getLiterature, addLiterature } = require('../controllers/literature')
+const { getLiterature, addLiterature, deleteLiterature } = require('../controllers/literature')
 const { uploadFile } = require('../middlewares/uploadFile')
 
 const router = express.Router()
 
 router.get('/literatures', getLiterature)
-router.post('/literatures', auth, uploadFile("attache", "/uploads/literatures"), addLiterature)
+router.post('/literatures', auth, uploadFile("attache", "uploads/literatures"), addLiterature)
+router.delete('/literatures/:id', auth, deleteLiterature)
 
 // login regis session
 router.post('/register', register)
