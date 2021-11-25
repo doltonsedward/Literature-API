@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   literature.init({
     title: DataTypes.STRING,
-    publication_date: DataTypes.DATE,
+    publication_date: DataTypes.STRING,
     pages: DataTypes.INTEGER,
     ISBN: DataTypes.INTEGER,
     author: DataTypes.STRING,

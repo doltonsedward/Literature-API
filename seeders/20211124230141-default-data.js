@@ -14,7 +14,8 @@ module.exports = {
         password: hashedPassword,
         gender: "Male",
         phone: "089619800459",
-        address: process.env.PATH_AVATAR_DEFAULT,
+        address: "Jl. Musyawarah",
+        avatar: process.env.PATH_AVATAR_DEFAULT,
         role: "admin"
       }
     ])

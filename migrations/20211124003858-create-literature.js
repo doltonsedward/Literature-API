@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       publication_date: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       pages: {
         type: Sequelize.INTEGER
