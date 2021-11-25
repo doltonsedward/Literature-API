@@ -12,12 +12,12 @@ exports.uploadFile = (imageFile, location) => {
 
     const fileFilter = (req, file, cb) => {
         if (file.fieldname === imageFile) {
-            if (!file.originalname.match(/\.(jpg|JPG|JPEG|png|PNG)$/)) {
+            if (!file.originalname.match(/\.(txt|doc|docs)$/)) {
                 req.fileValidationError = {
-                    message: 'Only image files are allowed'
+                    message: 'Only files are allowed'
                 }
 
-                return cb(new Error('Only image files are allowed'), false)
+                return cb(new Error('Only files are allowed'), false)
             }
 
             cb(null, true)
@@ -33,12 +33,7 @@ exports.uploadFile = (imageFile, location) => {
         limits: {
             fileSize: maxSize
         }
-    }).fields([
-        {
-            name: imageFile,
-            maxCount: 4
-        }
-    ])
+    }).single(imageFile)
 
     return (req, res, next) => {
         upload(req, res, function(err) {
@@ -46,7 +41,7 @@ exports.uploadFile = (imageFile, location) => {
                 return res.status(400).send(req.fileValidationError)
             }
 
-            if (!req.files && !err) {
+            if (!req.file && !err) {
                 return res.status(400).send({
                     message: 'Please select file to upload'
                 })
