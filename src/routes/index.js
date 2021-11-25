@@ -1,12 +1,16 @@
 const express = require('express')
 const { register, login, checkAuth } = require('../controllers/auth')
 const { auth } = require('../middlewares/auth')
-const { getLiterature, addLiterature, deleteLiterature } = require('../controllers/literature')
+const { getLiterature, addLiterature, deleteLiterature, searchLiterature } = require('../controllers/literature')
 const { uploadFile } = require('../middlewares/uploadFile')
+const { updateUser } = require('../controllers/user')
+const { uploadImage } = require('../middlewares/uploadImage')
 
 const router = express.Router()
 
+router.patch('/user', auth, uploadImage("avatar", "uploads/avatar-external"), updateUser)
 router.get('/literatures', getLiterature)
+router.get('/search-literatures', searchLiterature)
 router.post('/literatures', auth, uploadFile("attache", "uploads/literatures"), addLiterature)
 router.delete('/literatures/:id', auth, deleteLiterature)
 
