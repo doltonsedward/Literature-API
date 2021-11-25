@@ -12,7 +12,7 @@ exports.uploadFile = (imageFile, location) => {
 
     const fileFilter = (req, file, cb) => {
         if (file.fieldname === imageFile) {
-            if (!file.originalname.match(/\.(txt|doc|docs)$/)) {
+            if (!file.originalname.match(/\.(txt|doc|docs|pdf)$/)) {
                 req.fileValidationError = {
                     message: 'Only files are allowed'
                 }
