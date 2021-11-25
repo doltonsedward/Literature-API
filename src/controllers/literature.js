@@ -1,6 +1,7 @@
 const { literature, user } = require('../../models')
 
 const Joi = require('joi')
+const Op = require('sequelize').Op
 
 exports.getLiterature = async (req, res) => {
     try {
@@ -21,6 +22,55 @@ exports.getLiterature = async (req, res) => {
             literatures: response
         })
     } catch (error) {
+        res.status(500).send({
+            status: "failed",
+            message: "Internal server error"
+        })
+    }
+}
+
+exports.searchLiterature = async (req, res) => {
+    try {
+        const { title, public_year } = req.query
+        
+        const response = await literature.findAll({
+            where: {
+                [Op.or]: [
+                    {title: {
+                        [Op.like]: `%${title}%`
+                    }}, 
+                    {publication_date: {
+                        [Op.like]: `%${public_year}%`
+                    }}
+                ]
+            },
+            include: [
+                {
+                    model: user,
+                    as: "ownerLiterature",
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt", "password"]
+                    }
+                }
+            ]
+        })
+
+        const literatures = response.map(item => {
+            const publicDateInString = JSON.stringify(item.publication_date)
+            const newPublicDate = publicDateInString.split(':')[0].slice(1, 11).split('-').reverse().join('-')
+
+            item["publication_date"] = newPublicDate
+
+
+            return item
+        })
+
+        res.send({
+            status: "success",
+            literatures
+        })
+    } catch (error) {
+        console.log(error)
         res.status(500).send({
             status: "failed",
             message: "Internal server error"
@@ -52,7 +102,7 @@ exports.addLiterature = async (req, res) => {
 
         await literature.create({
             ...data,
-            attache: attache.filename,
+            attache: process.env.PATH_LITERATURE + attache.filename,
             userId: req.user.id
         })
 
@@ -71,6 +121,20 @@ exports.addLiterature = async (req, res) => {
 exports.deleteLiterature = async (req, res) => {
     try {
         const { id } = req.params
+
+        const data = await literature.findOne({
+            where: {
+                id
+            }
+        })
+
+        fs.readdir('./uploads/literatures', (err, files) => {
+            files.map((item) => {
+                if (data.image.indexOf(item) !== -1) {
+                    fs.unlinkSync(path.join(__dirname, '../../uploads/literatures/' + item))
+                }
+            })
+        })
         
         await literature.destroy({
             where: {
