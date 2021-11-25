@@ -113,11 +113,6 @@ exports.login = async (req, res) => {
         res.status(200).send({
             status: "success",
             user: {
-                id: userExist.id,
-                fullName: userExist.fullName,
-                email: userExist.email,
-                gender: userExist.gender,
-                avatar: userExist.avatar,
                 token
             }
         })
@@ -200,6 +195,7 @@ exports.checkAuth = async (req, res) => {
                     fullName: dataUser.fullName,
                     email: dataUser.email,
                     phone: dataUser.phone,
+                    gender: dataUser.gender,
                     address: dataUser.address,
                     role: dataUser.role,
                     avatar: dataUser.avatar,
