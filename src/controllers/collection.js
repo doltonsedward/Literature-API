@@ -1,4 +1,4 @@
-const { collection, literature } = require('../../models')
+const { collection, literature, user } = require('../../models')
 
 exports.getCollection = async (req, res) => {
     try {
@@ -12,18 +12,52 @@ exports.getCollection = async (req, res) => {
                     attributes: {
                         exclude: ["createdAt", "updatedAt"]
                     }
-                }
+                },
+                {
+                    model: user,
+                    as: "ownerCollection",
+                    where: {
+                        id: profile_id
+                    }
+                },
             ],
-            where: {
-                id: profile_id
-            }
         })
 
-        console.log(response)
+        const collections = response.map(item => {
+            const publicDateInString = JSON.stringify(item.literature.publication_date)
+            const newPublicDate = publicDateInString.split(':')[0].slice(1, 11).split('-').reverse().join('-')
+
+            item.literature["publication_date"] = newPublicDate
+
+            return item
+        })
 
         res.send({
             status: "success",
-            collection: response
+            collection: collections
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            status: "failed",
+            message: "Internal server error"
+        })
+    }
+}
+
+exports.addCollection = async (req, res) => {
+    try {
+        const { id } = req.user
+        const { literature_id } = req.params
+        
+        await collection.create({
+            userId: id,
+            literatureId: literature_id
+        })
+
+        res.send({
+            status: "success",
+            message: "Add collection finished"
         })
     } catch (error) {
         res.status(500).send({
@@ -32,11 +66,3 @@ exports.getCollection = async (req, res) => {
         })
     }
 }
-
-// exports.addCollection = async () => {
-//     try {
-        
-//     } catch (error) {
-        
-//     }
-// }
