@@ -104,7 +104,7 @@ exports.login = async (req, res) => {
         if (!isPassValid) {
             return res.status(400).send({
                 status: "failed",
-                message: "credential is invalid"
+                message: "Email or password are incorrect"
             })
         }
 
