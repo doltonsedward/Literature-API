@@ -29,6 +29,37 @@ exports.getLiterature = async (req, res) => {
     }
 }
 
+exports.detailLiterature = async (req, res) => {
+    try {
+        const { literature_id } = req.params
+        
+        const response = await literature.findOne({
+            include: [
+                {
+                    model: user,
+                    as: "ownerLiterature",
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt", "password"]
+                    }
+                }
+            ],
+            where: {
+                id: literature_id
+            }
+        })
+
+        res.send({
+            status: "success",
+            literature: response
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "failed",
+            message: "Internal server error"
+        })
+    }
+}
+
 exports.searchLiterature = async (req, res) => {
     try {
         const { title, public_year } = req.query
@@ -61,7 +92,6 @@ exports.searchLiterature = async (req, res) => {
 
             item["publication_date"] = newPublicDate
 
-
             return item
         })
 
@@ -70,7 +100,6 @@ exports.searchLiterature = async (req, res) => {
             literatures
         })
     } catch (error) {
-        console.log(error)
         res.status(500).send({
             status: "failed",
             message: "Internal server error"
@@ -102,8 +131,6 @@ exports.addLiterature = async (req, res) => {
         
         const isAlreadyExist = allLiterature.find(item => item.title.split(" ").join("") == data.title.split(" ").join(""))
 
-        console.log(isAlreadyExist)
-
         if (isAlreadyExist) {
             return res.status(400).send({
                 status: "failed",
@@ -124,7 +151,6 @@ exports.addLiterature = async (req, res) => {
             message: "Add literature finished"
         })
     } catch (error) {
-        console.log(error)
         res.status(500).send({
             status: "failed",
             message: "Internal server error"
