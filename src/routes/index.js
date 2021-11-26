@@ -14,8 +14,8 @@ router.patch('/user', auth, uploadImage("avatar", "uploads/avatar-external"), up
 // literature session
 router.get('/literatures', getLiterature)
 router.get('/search-literatures', searchLiterature)
-router.post('/literatures', auth, uploadFile("attache", "uploads/literatures"), addLiterature)
-router.delete('/literatures/:id', auth, deleteLiterature)
+router.post('/literature', auth, uploadFile("attache", "uploads/literatures"), addLiterature)
+router.delete('/literature/:id', auth, deleteLiterature)
 
 // collection session
 router.get('/collection/:profile_id', auth, getCollection)

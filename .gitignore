@@ -1,1 +1,5 @@
 node_modules
+uploads/literatures/*pdf
+uploads/literatures/*doc
+uploads/avatar-external/*png
+uploads/avatar-external/*jpg

@@ -98,6 +98,19 @@ exports.addLiterature = async (req, res) => {
     }
     
     try {
+        const allLiterature = await literature.findAll()
+        
+        const isAlreadyExist = allLiterature.find(item => item.title.split(" ").join("") == data.title.split(" ").join(""))
+
+        console.log(isAlreadyExist)
+
+        if (isAlreadyExist) {
+            return res.status(400).send({
+                status: "failed",
+                message: "Title already exist"
+            })
+        }
+        
         const attache = req.file
 
         await literature.create({
@@ -111,6 +124,7 @@ exports.addLiterature = async (req, res) => {
             message: "Add literature finished"
         })
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             status: "failed",
             message: "Internal server error"
