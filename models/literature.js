@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
   };
+  
   literature.init({
     title: DataTypes.STRING,
     publication_date: DataTypes.STRING,
@@ -25,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     ISBN: DataTypes.INTEGER,
     author: DataTypes.STRING,
     attache: DataTypes.STRING,
+    status: DataTypes.STRING,
     userId: DataTypes.INTEGER
   }, {
     sequelize,
