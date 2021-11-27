@@ -14,7 +14,8 @@ exports.getLiterature = async (req, res) => {
                         exclude: ["createdAt", "updatedAt", "password"]
                     }
                 }
-            ]
+            ],
+            order: [['updatedAt', 'DESC']]
         })
 
         res.send({
@@ -143,12 +144,38 @@ exports.addLiterature = async (req, res) => {
         await literature.create({
             ...data,
             attache: process.env.PATH_LITERATURE + attache.filename,
-            userId: req.user.id
+            userId: req.user.id,
+            status: 'Waiting'
         })
 
         res.send({
             status: "success",
             message: "Add literature finished"
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            status: "failed",
+            message: "Internal server error"
+        })
+    }
+}
+
+exports.updateLiterature = async (req, res) => {
+    try {
+        const { literature_id } = req.params
+
+        await literature.update({
+            ...req.body
+        }, {
+            where: {
+                id: literature_id
+            }
+        })
+
+        res.send({
+            status: "success",
+            message: "Update literature finished"
         })
     } catch (error) {
         res.status(500).send({
@@ -160,11 +187,11 @@ exports.addLiterature = async (req, res) => {
 
 exports.deleteLiterature = async (req, res) => {
     try {
-        const { id } = req.params
+        const { literature_id } = req.params
 
         const data = await literature.findOne({
             where: {
-                id
+                id: literature_id
             }
         })
 
