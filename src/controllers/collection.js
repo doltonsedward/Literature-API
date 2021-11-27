@@ -37,7 +37,6 @@ exports.getCollection = async (req, res) => {
             collection: collections
         })
     } catch (error) {
-        console.log(error)
         res.status(500).send({
             status: "failed",
             message: "Internal server error"
@@ -48,9 +47,11 @@ exports.getCollection = async (req, res) => {
 exports.addCollection = async (req, res) => {
     try {
         const { id } = req.user
+        const { name } = req.body
         const { literature_id } = req.params
         
         await collection.create({
+            name: name ?? 'My Collection',
             userId: id,
             literatureId: literature_id
         })
