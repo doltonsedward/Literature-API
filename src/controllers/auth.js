@@ -43,7 +43,7 @@ exports.register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         
-        const { fullName, email, phone, address } = req.body
+        const { fullName, email, phone, address, gender } = req.body
 
         const randomAvatar = Math.floor(Math.random() * (avatarDefault.length))
 
@@ -52,6 +52,7 @@ exports.register = async (req, res) => {
             email,
             password: hashedPassword,
             phone,
+            gender,
             address,
             role: 'user',
             avatar: process.env.PATH_AVATAR + avatarDefault[randomAvatar]
@@ -100,7 +101,6 @@ exports.login = async (req, res) => {
         })
 
         const isPassValid = await bcrypt.compare(req.body.password, userExist.password)
-
         if (!isPassValid) {
             return res.status(400).send({
                 status: "failed",
@@ -117,10 +117,9 @@ exports.login = async (req, res) => {
             }
         })
     } catch (error) {
-        console.log(error)
         res.status(500).send({
             status: "failed",
-            message: "Server error"
+            message: "Internal server error"
         })
     }
 }
