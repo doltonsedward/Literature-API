@@ -1,7 +1,7 @@
 const express = require('express')
 const { register, login, checkAuth } = require('../controllers/auth')
 const { auth } = require('../middlewares/auth')
-const { getLiterature, addLiterature, deleteLiterature, searchLiterature, detailLiterature } = require('../controllers/literature')
+const { getLiterature, addLiterature, deleteLiterature, searchLiterature, detailLiterature, updateLiterature } = require('../controllers/literature')
 const { uploadFile } = require('../middlewares/uploadFile')
 const { updateUser } = require('../controllers/user')
 const { uploadImage } = require('../middlewares/uploadImage')
@@ -19,7 +19,8 @@ router.get('/literatures', getLiterature)
 router.get('/literature/:literature_id', detailLiterature)
 router.get('/search-literatures', searchLiterature)
 router.post('/literature', auth, uploadFile("attache", "uploads/literatures"), addLiterature)
-router.delete('/literature/:id', auth, deleteLiterature)
+router.patch('/literature/:literature_id', auth, updateLiterature)
+router.delete('/literature/:literature_id', auth, deleteLiterature)
 
 // collection session
 router.get('/collection/:profile_id', auth, getCollection)

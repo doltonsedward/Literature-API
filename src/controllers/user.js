@@ -1,7 +1,6 @@
 const { user } = require('../../models')
 
 const Joi = require('joi')
-const Op = require('sequelize').Op
 
 exports.updateUser = async (req, res) => {
     const schema = Joi.object({
