@@ -44,14 +44,43 @@ exports.detailLiterature = async (req, res) => {
                     }
                 }
             ],
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "password"]
+            },
             where: {
                 id: literature_id
             }
         })
 
+        const publicDateInString = JSON.stringify(response.publication_date)
+        const newPublicDate = publicDateInString.split(':')[0].slice(1, 11).split('-').reverse().join('-')
+
+        const {  
+            id,
+            title,
+            pages,
+            ISBN,
+            author, 
+            attache,
+            status,
+            userId,
+            ownerLiterature
+        } = response
+
         res.send({
             status: "success",
-            literature: response
+            literature: {
+                id,
+                title,
+                publication_date: newPublicDate,
+                pages,
+                ISBN,
+                author,
+                attache,
+                status,
+                userId,
+                ownerLiterature
+            }
         })
     } catch (error) {
         res.status(500).send({
@@ -84,7 +113,8 @@ exports.searchLiterature = async (req, res) => {
                         exclude: ["createdAt", "updatedAt", "password"]
                     }
                 }
-            ]
+            ],
+            order: [["updatedAt", "DESC"]]
         })
 
         const literatures = response.map(item => {
@@ -188,30 +218,16 @@ exports.updateLiterature = async (req, res) => {
 exports.deleteLiterature = async (req, res) => {
     try {
         const { literature_id } = req.params
-
-        const data = await literature.findOne({
+        
+        await literature.destroy({
             where: {
                 id: literature_id
             }
         })
 
-        fs.readdir('./uploads/literatures', (err, files) => {
-            files.map((item) => {
-                if (data.image.indexOf(item) !== -1) {
-                    fs.unlinkSync(path.join(__dirname, '../../uploads/literatures/' + item))
-                }
-            })
-        })
-        
-        await literature.destroy({
-            where: {
-                id
-            }
-        })
-
         res.send({
             status: "success",
-            message: `Delete literature with id: ${id} finished`
+            message: `Delete literature with id: ${literature_id} finished`
         })
     } catch (error) {
         res.status(500).send({
