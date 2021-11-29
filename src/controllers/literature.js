@@ -18,6 +18,47 @@ exports.getLiterature = async (req, res) => {
             order: [['updatedAt', 'DESC']]
         })
 
+        const date = new Date()
+        const dateNow = date.toLocaleString().split('/')
+
+        let literatures = response.filter(item => item.status === 'Approve' && (item.publication_date.split('-')[0] <= dateNow[0] || item.publication_date.split('-')[1] <= dateNow[0]))
+
+        literatures = literatures.map(item => {
+            const publicDateInString = JSON.stringify(item.publication_date)
+            const newPublicDate = publicDateInString.split(':')[0].slice(1, 11).split('-').reverse().join('-')
+
+            item["publication_date"] = newPublicDate
+
+            return item
+        })
+
+        res.send({
+            status: "success",
+            literatures
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "failed",
+            message: "Internal server error"
+        })
+    }
+}
+
+exports.getLiteratureForAdmin = async (req, res) => {
+    try {
+        const response = await literature.findAll({
+            include: [
+                {
+                    model: user,
+                    as: "ownerLiterature",
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt", "password"]
+                    }
+                }
+            ],
+            order: [['updatedAt', 'DESC']]
+        })
+
         res.send({
             status: "success",
             literatures: response
@@ -52,11 +93,54 @@ exports.detailLiterature = async (req, res) => {
             }
         })
 
-        const publicDateInString = JSON.stringify(response.publication_date)
-        const newPublicDate = publicDateInString.split(':')[0].slice(1, 11).split('-').reverse().join('-')
+        const publicDateInArray = response.publication_date.split('-').reverse()
+
+        let newPublicDate
+
+        switch (publicDateInArray[1]) {
+            case '1':
+                newPublicDate = 'January ' + publicDateInArray[2]
+                break;
+            case '2':
+                newPublicDate = 'February ' + publicDateInArray[2]
+                break;
+            case '3':
+                newPublicDate = 'Maret ' + publicDateInArray[2]
+                break;
+            case '4':
+                newPublicDate = 'April ' + publicDateInArray[2]
+                break;
+            case '5':
+                newPublicDate = 'Mei ' + publicDateInArray[2]
+                break;
+            case '6':
+                newPublicDate = 'June ' + publicDateInArray[2]
+                break;
+            case '7':
+                newPublicDate = 'July ' + publicDateInArray[2]
+                break;
+            case '8':
+                newPublicDate = 'August ' + publicDateInArray[2]
+                break;
+            case '9':
+                newPublicDate = 'September ' + publicDateInArray[2]
+                break;
+            case '10':
+                newPublicDate = 'October ' + publicDateInArray[2]
+                break;
+            case '11':
+                newPublicDate = 'November ' + publicDateInArray[2]
+                break;
+            case '12':
+                newPublicDate = 'December ' + publicDateInArray[2]
+                break;
+        
+            default:
+                break;
+        }
 
         const {  
-            id,
+            id, 
             title,
             pages,
             ISBN,
@@ -117,7 +201,12 @@ exports.searchLiterature = async (req, res) => {
             order: [["updatedAt", "DESC"]]
         })
 
-        const literatures = response.map(item => {
+        const date = new Date()
+        const dateNow = date.toLocaleString().split('/')
+
+        let literatures = response.filter(item => item.status === 'Approve' && (item.publication_date.split('-')[0] <= dateNow[0] || item.publication_date.split('-')[1] <= dateNow[0]))
+
+        literatures = literatures.map(item => {
             const publicDateInString = JSON.stringify(item.publication_date)
             const newPublicDate = publicDateInString.split(':')[0].slice(1, 11).split('-').reverse().join('-')
 
@@ -131,6 +220,7 @@ exports.searchLiterature = async (req, res) => {
             literatures
         })
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             status: "failed",
             message: "Internal server error"
