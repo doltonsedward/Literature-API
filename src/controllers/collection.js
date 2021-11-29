@@ -90,16 +90,12 @@ exports.getCollectionByLiterature = async (req, res) => {
 exports.addCollection = async (req, res) => {
     try {
         const { id } = req.user
-        const { name } = req.body
         const { literature_id } = req.params
         
-        const response = await collection.create({
-            name: name ? name : 'My Collection',
+        await collection.create({
             userId: id,
             literatureId: literature_id
         })
-
-        console.log(response)
 
         res.send({
             status: "success",
