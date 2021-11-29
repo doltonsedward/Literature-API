@@ -13,7 +13,6 @@ exports.updateUser = async (req, res) => {
     const { error } = schema.validate(req.body)
 
     if (error) {
-        console.log(error.details[0].message)
         return res.status(400).send({
             error: {
                 message: error.details[0].message
@@ -35,7 +34,31 @@ exports.updateUser = async (req, res) => {
 
         res.send({
             status: "success",
-            message: `Update user id: ${id} finished`
+            message: `Update profile finished`
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: "failed",
+            message: "Internal server error"
+        })
+    }
+}
+
+exports.updateUserSpecificData = async (req, res) => {
+    try {
+        const { id } = req.user
+        
+        await user.update({
+            ...req.body
+        }, {
+            where: {
+                id
+            }
+        })
+
+        res.send({
+            status: "success",
+            message: `Update profile finished`
         })
     } catch (error) {
         console.log(error)
@@ -45,4 +68,3 @@ exports.updateUser = async (req, res) => {
         })
     }
 }
-
