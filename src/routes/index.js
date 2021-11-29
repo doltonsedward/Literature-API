@@ -1,13 +1,14 @@
 const express = require('express')
-const { register, login, checkAuth, loginOauth } = require('../controllers/auth')
+const { register, login, checkAuth } = require('../controllers/auth')
 const { auth } = require('../middlewares/auth')
-const { getLiterature, addLiterature, deleteLiterature, searchLiterature, detailLiterature, updateLiterature } = require('../controllers/literature')
+const { getLiterature, addLiterature, deleteLiterature, searchLiterature, detailLiterature, updateLiterature, getLiteratureForAdmin } = require('../controllers/literature')
 const { uploadFile } = require('../middlewares/uploadFile')
 const { updateUser, updateUserSpecificData } = require('../controllers/user')
 const { uploadImage } = require('../middlewares/uploadImage')
 const { getCollection, addCollection, getCollectionByLiterature, deleteCollection } = require('../controllers/collection')
 const { getOwnerLiterature } = require('../controllers/profile')
 const { oauthGoogle } = require('../controllers/oauth')
+const { checkAdmin } = require('../middlewares/checkAdmin')
 
 const router = express.Router()
 
@@ -18,10 +19,11 @@ router.get('/profile/:profile_id/literature', getOwnerLiterature)
 
 // literature session
 router.get('/literatures', getLiterature)
+router.get('/literatures/admin', getLiteratureForAdmin)
 router.get('/literature/:literature_id', detailLiterature)
 router.get('/search-literatures', searchLiterature)
 router.post('/literature', auth, uploadFile("attache", "uploads/literatures"), addLiterature)
-router.patch('/literature/:literature_id', auth, updateLiterature)
+router.patch('/literature/:literature_id', auth, checkAdmin, updateLiterature)
 router.delete('/literature/:literature_id', auth, deleteLiterature)
 
 // collection session
