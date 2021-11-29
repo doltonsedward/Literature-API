@@ -98,6 +98,13 @@ exports.login = async (req, res) => {
             }
         })
 
+        if (!userExist) {
+            return res.status(400).send({
+                status: "failed",
+                message: "Email or password are incorrect"
+            })
+        }
+
         const isPassValid = await bcrypt.compare(req.body.password, userExist.password)
         if (!isPassValid) {
             return res.status(400).send({
@@ -107,7 +114,7 @@ exports.login = async (req, res) => {
         }
 
         // create jwt token, and add id, role to token. expiresIn for expires date of token
-        const token = jwt.sign({ id: userExist.id, role: userExist.role }, process.env.TKEY) 
+        const token = jwt.sign({ id: userExist.id, role: userExist.role }, process.env.TKEY, { expiresIn: '1d' }) 
         res.status(200).send({
             status: "success",
             user: {
