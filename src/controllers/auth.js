@@ -73,8 +73,6 @@ exports.register = async (req, res) => {
     }
 }
 
-
-
 // login section
 exports.login = async (req, res) => {
     const schema = Joi.object({
@@ -124,48 +122,6 @@ exports.login = async (req, res) => {
     }
 }
 
-exports.checkAuth = async (req, res) => {
-    try {
-        const { id } = req.user
-        
-        const dataUser = await user.findOne({
-            where: {
-                id,
-            },
-            attributes: {
-                exclude: ["createdAt", "updatedAt", "password"],
-            }
-        })
-
-        if (!dataUser) {
-            return res.status(404).send({
-                status: "failed",
-            })
-        }
-        
-        res.send({
-            status: "success",
-            data: {
-                user: {
-                    id: dataUser.id,
-                    fullName: dataUser.fullName,
-                    email: dataUser.email,
-                    phone: dataUser.phone,
-                    address: dataUser.address,
-                    role: dataUser.role,
-                    avatar: dataUser.avatar,
-                },
-            }
-        });
-    } catch (error) {
-        console.log(error)
-        res.status(500).send({
-            status: 'failed',
-            message: 'Server error'
-        })
-    }
-}
-
 // check is authentication valid
 exports.checkAuth = async (req, res) => {
     try {
@@ -173,7 +129,7 @@ exports.checkAuth = async (req, res) => {
         
         const dataUser = await user.findOne({
             where: {
-                id,
+                id
             },
             attributes: {
                 exclude: ["createdAt", "updatedAt", "password"],
