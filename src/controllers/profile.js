@@ -21,7 +21,7 @@ exports.getOwnerLiterature = async (req, res) => {
 
         const literatures = response.map(item => {
             const publicDateInString = JSON.stringify(item.publication_date)
-            const newPublicDate = publicDateInString.split(':')[0].slice(1, 11).split('-').reverse().join('-')
+            const newPublicDate = publicDateInString.split(':')[0].slice(1, 11).split('-').reverse()[2]
 
             item["publication_date"] = newPublicDate
             
