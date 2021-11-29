@@ -26,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   collection.init({
-    name: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     literatureId: DataTypes.INTEGER
   }, {
