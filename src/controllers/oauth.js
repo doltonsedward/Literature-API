@@ -39,6 +39,7 @@ exports.oauthGoogle = async (req, res) => {
             return res.send({
                 status: "success",
                 user: {
+                    fullName: dataUser.fullName,
                     token
                 }
             })
