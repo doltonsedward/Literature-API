@@ -13,11 +13,11 @@ exports.checkAdmin = (req, res, next) => {
     }
 
     try {
-        const verified = jwt.verify(token, process.env.TOKEN_KEY)
+        const verified = jwt.verify(token, process.env.TKEY)
         req.user = verified
 
         next()
     } catch (error) {
-        req.status(400).send({ message: "Invalid token" })
+        res.status(400).send({ message: "Invalid token" })
     }
 }
