@@ -56,7 +56,7 @@ exports.getLiteratureForAdmin = async (req, res) => {
                     }
                 }
             ],
-            order: [['updatedAt', 'DESC']]
+            order: [['status', 'DESC']]
         })
 
         res.send({
