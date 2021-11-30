@@ -58,11 +58,13 @@ exports.register = async (req, res) => {
             avatar: process.env.PATH_AVATAR + avatarDefault[randomAvatar]
         })
 
+        const token = jwt.sign({ id: newUser.id, role: newUser.role }, process.env.TKEY, { expiresIn: '1d' }) 
+
         res.status(200).send({
             status: "success",
-            data: {
+            user: {
                 fullName: newUser.fullName,
-                email: newUser.email
+                token
             }
         })
     } catch (error) {
@@ -118,6 +120,7 @@ exports.login = async (req, res) => {
         res.status(200).send({
             status: "success",
             user: {
+                fullName: userExist.fullName,
                 token
             }
         })
