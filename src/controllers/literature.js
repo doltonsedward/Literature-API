@@ -56,7 +56,10 @@ exports.getLiteratureForAdmin = async (req, res) => {
                     }
                 }
             ],
-            order: [['status', 'DESC']]
+            order: [
+                ["status", "DESC"],
+                ["updatedAt", "DESC"]
+            ]
         })
 
         res.send({
@@ -177,29 +180,65 @@ exports.detailLiterature = async (req, res) => {
 exports.searchLiterature = async (req, res) => {
     try {
         const { title, public_year } = req.query
-        
-        const response = await literature.findAll({
-            where: {
-                [Op.or]: [
-                    {title: {
-                        [Op.like]: `%${title}%`
-                    }}, 
-                    {publication_date: {
-                        [Op.like]: `%${public_year}%`
-                    }}
-                ]
-            },
-            include: [
-                {
-                    model: user,
-                    as: "ownerLiterature",
-                    attributes: {
-                        exclude: ["createdAt", "updatedAt", "password"]
+
+        let response 
+
+        if (!title || !public_year) {
+            response = await literature.findAll({
+                where: {
+                    [Op.or]: [
+                        {
+                            title: {
+                                [Op.like]: `%${title}%`
+                            }
+                        },
+                        {
+                            publication_date: {
+                                [Op.like]: `%${public_year}%`
+                            }
+                        }
+                    ]
+                },
+                include: [
+                    {
+                        model: user,
+                        as: "ownerLiterature",
+                        attributes: {
+                            exclude: ["createdAt", "updatedAt", "password"]
+                        }
                     }
-                }
-            ],
-            order: [["updatedAt", "DESC"]]
-        })
+                ],
+                order: [["updatedAt", "DESC"]]
+            })
+        } else {
+            response = await literature.findAll({
+                where: {
+                    [Op.and]: [
+                        {
+                            title: {
+                                [Op.like]: `%${title}%`
+                            }
+                        },
+                        {
+                            publication_date: {
+                                [Op.like]: `%${public_year}%`
+                            }
+                        }
+                    ]
+                },
+                include: [
+                    {
+                        model: user,
+                        as: "ownerLiterature",
+                        attributes: {
+                            exclude: ["createdAt", "updatedAt", "password"]
+                        }
+                    }
+                ],
+                order: [["updatedAt", "DESC"]]
+            })
+        }
+        
 
         const date = new Date()
         const dateNow = date.toLocaleString().split('/')
