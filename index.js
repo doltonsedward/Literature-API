@@ -1,4 +1,6 @@
 require('dotenv').config()
+const checkFolder = require('./src/utils/checkfolder')
+checkFolder() // check if folder exist, if not create it
 
 // import library
 const express = require('express')
