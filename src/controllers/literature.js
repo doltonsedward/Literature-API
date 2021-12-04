@@ -302,7 +302,7 @@ exports.addLiterature = async (req, res) => {
         const path_literature = process.env.DEV_BASE_URL || process.env.PATH_LITERATURE
         await literature.create({
             ...data,
-            attache: path_literature + attache.filename,
+            attache: `${path_literature}/${attache.filename}`,
             userId: req.user.id,
             status: 'Waiting'
         })
