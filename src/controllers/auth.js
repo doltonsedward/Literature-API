@@ -47,6 +47,7 @@ exports.register = async (req, res) => {
 
         const randomAvatar = Math.floor(Math.random() * (avatarDefault.length))
 
+        const path_avatar = process.env.PATH_AVATAR || process.env.DEV_PATH_AVATAR
         const newUser = await user.create({
             fullName,
             email,
@@ -55,7 +56,7 @@ exports.register = async (req, res) => {
             gender,
             address,
             role: 'user',
-            avatar: process.env.PATH_AVATAR + avatarDefault[randomAvatar]
+            avatar: path_avatar + avatarDefault[randomAvatar]
         })
 
         const token = jwt.sign({ id: newUser.id, role: newUser.role }, process.env.TKEY, { expiresIn: '1d' }) 

@@ -1,6 +1,5 @@
 const { user } = require('../../models')
 
-const Joi = require('joi')
 const cloudinary = require('../thirdparty/cloudinary')
 
 exports.updateUser = async (req, res) => {
@@ -15,14 +14,14 @@ exports.updateUser = async (req, res) => {
                 })
             }
 
-            // await user.update({
-            //     ...req.body,
-            //     avatar: result.secure_url
-            // }, {
-            //     where: {
-            //         id
-            //     }
-            // })
+            await user.update({
+                ...req.body,
+                avatar: result.secure_url
+            }, {
+                where: {
+                    id
+                }
+            })
 
             return res.send({
                 status: "success",

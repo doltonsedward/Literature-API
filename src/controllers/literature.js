@@ -2,7 +2,6 @@ const { literature, user } = require('../../models')
 
 const Joi = require('joi')
 const Op = require('sequelize').Op
-const cloudinary = require('../thirdparty/cloudinary')
 
 exports.getLiterature = async (req, res) => {
     try {
@@ -300,10 +299,10 @@ exports.addLiterature = async (req, res) => {
         }
         
         const attache = req.file
-
+        const path_literature = process.env.DEV_BASE_URL || process.env.PATH_LITERATURE
         await literature.create({
             ...data,
-            attache: process.env.PATH_LITERATURE + attache.filename,
+            attache: path_literature + attache.filename,
             userId: req.user.id,
             status: 'Waiting'
         })
