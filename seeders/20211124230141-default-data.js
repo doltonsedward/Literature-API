@@ -17,7 +17,7 @@ module.exports = {
         address: "Jl. Musyawarah",
         avatar: process.env.PATH_AVATAR_DEFAULT,
         role: "admin",
-        createdAt: "4 december 20021",
+        createdAt: "3 december 20021",
         updatedAt: "4 december 2021"
       }
     ])
