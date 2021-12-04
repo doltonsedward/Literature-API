@@ -16,7 +16,9 @@ module.exports = {
         phone: "089619800459",
         address: "Jl. Musyawarah",
         avatar: process.env.PATH_AVATAR_DEFAULT,
-        role: "admin"
+        role: "admin",
+        createdAt: "4 december 20021",
+        updatedAt: "4 december 2021"
       }
     ])
   },
