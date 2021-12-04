@@ -1,12 +1,13 @@
 const multer = require('multer')
 
 exports.uploadImage = (imageFile, location) => {
+    const idFile = Date.now().toString().substring(0, 4)
     const storage = multer.diskStorage({
         destination: function(req, file, cb) {
             cb(null, location)
         },
         filename: function(req, file, cb) {
-            cb(null, Date.now() + '-' + file.originalname.replace(/\s/g, ''))
+            cb(null, idFile + '-' + file.originalname.replace(/\s/g, ''))
         }
     })
 

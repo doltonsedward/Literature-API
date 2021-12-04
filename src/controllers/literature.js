@@ -2,6 +2,7 @@ const { literature, user } = require('../../models')
 
 const Joi = require('joi')
 const Op = require('sequelize').Op
+const cloudinary = require('../thirdparty/cloudinary')
 
 exports.getLiterature = async (req, res) => {
     try {
