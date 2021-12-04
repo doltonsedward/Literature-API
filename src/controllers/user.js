@@ -1,12 +1,15 @@
 const { user } = require('../../models')
 
+const fs = require('fs')
 const cloudinary = require('../thirdparty/cloudinary')
+const checkFolder = require('../utils/checkfolder')
 
 exports.updateUser = async (req, res) => {
     try {
         const { id } = req.user
 
-        cloudinary.uploader.upload(req.file.path, { folder: 'avatar-literature' }, async (error, result) => {
+        const pathfile = req.file.path
+        cloudinary.uploader.upload(pathfile, { folder: 'avatar-literature' }, async (error, result) => {
             if (error) {
                 return res.status(500).send({
                     status: "failed",
@@ -22,6 +25,9 @@ exports.updateUser = async (req, res) => {
                     id
                 }
             })
+
+            fs.rmdirSync('./uploads/avatar-external', { recursive: true })
+            checkFolder()
 
             return res.send({
                 status: "success",

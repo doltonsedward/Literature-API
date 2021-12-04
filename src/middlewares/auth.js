@@ -11,6 +11,7 @@ exports.auth = (req, res, next) => {
         req.user = verified
         next()
     } catch (error) {
+        console.log(error)
         res.status(400).send({ message: "Invalid Token" })
     }
 }
